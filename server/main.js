@@ -1,20 +1,26 @@
-import { Meteor } from 'meteor/meteor';
-
+import {Meteor} from 'meteor/meteor';
 import {Restivus} from 'meteor/nimble:restivus';
+import {Utils as u} from './utils';
 
-var Api = new Restivus({
-  useDefaultAuth: true,
-  prettyJson: true
-});
+let Api = new Restivus();
 
-Api.addRoute('reflect', {authRequired: false}, {
+Api.addRoute('reflect', {
 
   post: function () {
-    return this.bodyParams;
-  },
+    
+    let h = this.request.headers;
+    let b = this.bodyParams;
+    if(b && _.isObject(b)){
+      u.logOutput(b);
+      b.reflectorID = u.recordRequest(h, b);
+      return b;
+    } else {
+      return {
+        message: 'Empty request received from ' + h['x-forwarded-for']
 
-  get: function () {
-    return this.bodyParams;
+    }
+    }
+    
   }
 
 });
@@ -22,32 +28,14 @@ Api.addRoute('reflect', {authRequired: false}, {
 Api.addRoute('reflect-more', {authRequired: false}, {
 
   post: function () {
-    return reflectMore(this.bodyParams);
+    return u.reflectMore(this.bodyParams);
   },
 
   get: function () {
-    return reflectMore(this.bodyParams);
+    return u.reflectMore(this.bodyParams);
   }
 
 });
-
-var reflectMore = (params)=>{
-  
-  let date = new Date();
-  
-  if(params){
-    if(params.invoker){
-      console.log('Checkstat called by ' + params.invoker + ' at ' + date); // add requester
-    } else {
-      console.log('Checkstat called by Anonymous at ' + date);
-    }
-  }
-  return {
-    params: params,
-    success: true,
-    timestamp: date
-  };
-};
 
 
 

@@ -1,0 +1,37 @@
+<template name="output">
+  {{#unless subsReady}}
+    {{>loading}}
+  {{else}}
+    <h1 class="text-warning">Reflector Mage</h1>
+    <h2>Bringing the underground to the next stage</h2>
+    <button class="btn btn-large btn-danger clearRecords">Clear All</button>
+
+    {{#each records}}
+      {{#if error}}
+        <div class="row result-row">
+          <h3 class="text-danger">{{message}}</h3>
+        </div>
+      {{else}}
+        {{#transition in="bounceInDown" out="zoomOutDown"}}
+          <div class="row result-row">
+            <div class="animated out">
+              <div class="col-lg-8">
+                <span class="label label-default">{{formatDate createdAt}}</span>
+                <span class="label label-default">{{header}}</span>
+                <pre>{{output bodyParams}}</pre>
+                <span class="label label-success">Success</span>
+              </div>
+              <div class="col-lg-2">
+                <button id="{{_id}}" class="btn btn-sm btn-danger deleteSingle">X</button>
+              </div>
+            </div>
+          </div>
+        {{/transition}}
+      {{/if}}
+    {{/each}}
+
+
+
+  {{/unless}}
+
+</template>
