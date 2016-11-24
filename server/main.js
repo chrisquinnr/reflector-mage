@@ -1,7 +1,11 @@
 import {Meteor} from 'meteor/meteor';
 import {Restivus} from 'meteor/nimble:restivus';
 import {Utils as u} from './utils';
-
+// Listen to incoming HTTP requests, can only be used on the server
+WebApp.rawConnectHandlers.use(function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  return next();
+});
 let Api = new Restivus();
 
 Api.addRoute('reflect', {
@@ -37,6 +41,16 @@ Api.addRoute('reflect-more', {authRequired: false}, {
 
 });
 
+Api.addRoute('getLeaderBoard', {authRequired: false}, {
 
+  post: function () {
+    return u.retrieveData();
+  },
+
+  get: function () {
+    return u.retrieveData();
+  }
+
+});
 
 

@@ -51,4 +51,13 @@ export var Utils = new class {
     };
   };
 
+  retrieveData(params = null){
+    let r = Records.find({}).fetch();
+    let filter = _.pluck(r, 'bodyParams');
+    let sort = _.sortBy(filter, function(o) { return -o.score; });
+
+    return sort;
+
+  }
+
 };
