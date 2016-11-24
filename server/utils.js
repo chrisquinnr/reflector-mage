@@ -34,13 +34,15 @@ export var Utils = new class {
     return _.sortBy(filter, function(o) { return -o.score; });
   }
 
-  getBattleScore(){
+  getBattleScores(){
     let r = Records.find({}).fetch();
     let f = _.pluck(r, 'bodyParams');
-    let g = _.groupBy(f, 'side');
-    console.log(g);
-    // let whiteTotal = _.map(g, (elem)=>{re})
-    return true;
+    let gr = _.groupBy(f, 'side');
+    // console.log(g);
+    return _(gr).map(function(g, key) {
+      return { type: key,
+        val: _(g).reduce(function(m,x) { return m + +x.score; }, 0) };
+    });
   }
 
 };

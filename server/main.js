@@ -29,7 +29,7 @@ Api.addRoute('postScore', {
 Api.addRoute('getBattleScores',{authRequired: false}, {
 
   get: function () {
-    return u.getBattleScore();
+    return u.getBattleScores();
   }
 });
 
