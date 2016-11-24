@@ -3,11 +3,12 @@ import {Records} from '../common/collections';
 export var Utils = new class {
 
   constructor() {
-  }
 
+  }
 
   /**
    * Logs out the request
+   * @param header
    * @param request
    */
   logOutput(header, request) {
@@ -23,41 +24,23 @@ export var Utils = new class {
   recordRequest(header, request) {
     let head = {
       source: header['x-forwarded-for']
-    }
-    return Records.insert({header: head, bodyParams:request});
-  };
-
-  /**
-   * More verbose output, for use as a declared dependency
-   * in other Meteor app startup routines
-   * @param params
-   * @returns {{params: *, success: boolean, timestamp: Date}}
-   */
-  reflectMore(params) {
-
-    let date = new Date();
-
-    if (params) {
-      if (params.invoker) {
-        console.log('Checkstat called by ' + params.invoker + ' at ' + date); // add requester
-      } else {
-        console.log('Checkstat called by Anonymous at ' + date);
-      }
-    }
-    return {
-      params: params,
-      success: true,
-      timestamp: date
     };
+    return Records.insert({header: head, bodyParams:request});
   };
 
   retrieveData(params = null){
     let r = Records.find({}).fetch();
     let filter = _.pluck(r, 'bodyParams');
-    let sort = _.sortBy(filter, function(o) { return -o.score; });
+    return _.sortBy(filter, function(o) { return -o.score; });
+  }
 
-    return sort;
-
+  getBattleScore(){
+    let r = Records.find({}).fetch();
+    let f = _.pluck(r, 'bodyParams');
+    let g = _.groupBy(f, 'side');
+    console.log(g);
+    // let whiteTotal = _.map(g, (elem)=>{re})
+    return true;
   }
 
 };
